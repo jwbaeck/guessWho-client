@@ -1,0 +1,182 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --text-50: #ffffff;
+    --text-100: #daf3d8;
+    --text-200: #b6e7b1;
+    --text-300: #91da8b;
+    --text-400: #6dce64;
+    --text-500: #48c23d;
+    --text-600: #3a9b31;
+    --text-700: #2b7425;
+    --text-800: #1d4e18;
+    --text-900: #0e270c;
+    --text-950: #071306;
+
+    --warn-50: #fef2f2;
+    --warn-100: #fee2e2;
+    --warn-200: #fecaca;
+    --warn-300: #fca5a5;
+    --warn-400: #f87171;
+    --warn-500: #ef4444;
+    --warn-600: #dc2626;
+    --warn-700: #b91c1c;
+    --warn-800: #991b1b;
+    --warn-900: #7f1d1d;
+    --warn-950: #450a0a;
+
+    --background-50: #ffffff;
+    --background-100: #dbf0db;
+    --background-200: #b8e0b8;
+    --background-300: #94d194;
+    --background-400: #70c270;
+    --background-500: #4db34d;
+    --background-600: #3d8f3d;
+    --background-700: #2e6b2e;
+    --background-800: #1f471f;
+    --background-900: #0f240f;
+    --background-950: #030703;
+
+    --primary-50: #edf9ec;
+    --primary-100: #dbf3d8;
+    --primary-200: #b8e7b1;
+    --primary-300: #94da8b;
+    --primary-400: #70ce64;
+    --primary-500: #4dc23d;
+    --primary-600: #3d9b31;
+    --primary-700: #2e7425;
+    --primary-800: #1f4e18;
+    --primary-900: #0f270c;
+    --primary-950: #081306;
+
+    --secondary-50: #ecf9f4;
+    --secondary-100: #d8f3e9;
+    --secondary-200: #b1e7d2;
+    --secondary-300: #8bdabc;
+    --secondary-400: #64cea5;
+    --secondary-500: #3dc28f;
+    --secondary-600: #319b72;
+    --secondary-700: #257456;
+    --secondary-800: #184e39;
+    --secondary-900: #0c271d;
+    --secondary-950: #06130e;
+
+    --accent-50: #ecf9f7;
+    --accent-100: #d8f3ef;
+    --accent-200: #b2e6de;
+    --accent-300: #8bdace;
+    --accent-400: #65cdbd;
+    --accent-500: #3ec1ad;
+    --accent-600: #329a8a;
+    --accent-700: #257468;
+    --accent-800: #194d45;
+    --accent-900: #0c2723;
+    --accent-950: #061311;
+  }
+  .dark {
+    --text-50: #071306;
+    --text-100: #0e270c;
+    --text-200: #1d4e18;
+    --text-300: #2b7425;
+    --text-400: #3a9b31;
+    --text-500: #48c23d;
+    --text-600: #6dce64;
+    --text-700: #91da8b;
+    --text-800: #b6e7b1;
+    --text-900: #daf3d8;
+    --text-950: #ffffff;
+
+    --warn-50: #450a0a;
+    --warn-100: #7f1d1d;
+    --warn-200: #991b1b;
+    --warn-300: #b91c1c;
+    --warn-400: #dc2626;
+    --warn-500: #ef4444;
+    --warn-600: #f87171;
+    --warn-700: #fca5a5;
+    --warn-800: #fecaca;
+    --warn-900: #fee2e2;
+    --warn-950: #fef2f2;
+
+    --background-50: #030703;
+    --background-100: #0f240f;
+    --background-200: #1f471f;
+    --background-300: #2e6b2e;
+    --background-400: #3d8f3d;
+    --background-500: #4db34d;
+    --background-600: #70c270;
+    --background-700: #94d194;
+    --background-800: #b8e0b8;
+    --background-900: #dbf0db;
+    --background-950: #ffffff;
+
+    --primary-50: #081306;
+    --primary-100: #0f270c;
+    --primary-200: #1f4e18;
+    --primary-300: #2e7425;
+    --primary-400: #3d9b31;
+    --primary-500: #4dc23d;
+    --primary-600: #70ce64;
+    --primary-700: #94da8b;
+    --primary-800: #b8e7b1;
+    --primary-900: #dbf3d8;
+    --primary-950: #edf9ec;
+
+    --secondary-50: #06130e;
+    --secondary-100: #0c271d;
+    --secondary-200: #184e39;
+    --secondary-300: #257456;
+    --secondary-400: #319b72;
+    --secondary-500: #3dc28f;
+    --secondary-600: #64cea5;
+    --secondary-700: #8bdabc;
+    --secondary-800: #b1e7d2;
+    --secondary-900: #d8f3e9;
+    --secondary-950: #ecf9f4;
+
+    --accent-50: #061311;
+    --accent-100: #0c2723;
+    --accent-200: #194d45;
+    --accent-300: #257468;
+    --accent-400: #329a8a;
+    --accent-500: #3ec1ad;
+    --accent-600: #65cdbd;
+    --accent-700: #8bdace;
+    --accent-800: #b2e6de;
+    --accent-900: #d8f3ef;
+    --accent-950: #ecf9f7;
+  }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  box-shadow: 0 0 0px 1000px transparent inset;
+  -webkit-transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:autofill,
+input:autofill:hover,
+input:autofill:focus,
+input:autofill:active {
+  box-shadow: 0 0 0px 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:-webkit-autofill:disabled {
+  -webkit-text-fill-color: gray;
+  box-shadow: 0 0 0px 1000px transparent inset;
+  -webkit-transition: background-color 5000s ease-in-out 0s;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+input:autofill:disabled {
+  -webkit-text-fill-color: gray;
+  box-shadow: 0 0 0px 1000px transparent inset;
+  transition: background-color 5000s ease-in-out 0s;
+}
