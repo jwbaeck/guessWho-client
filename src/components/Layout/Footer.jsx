@@ -1,6 +1,8 @@
 function Footer() {
   return (
-    <footer>Footer</footer>
+    <footer className="bg-black flex items-center justify-center h-20">
+      Footer
+    </footer>
   );
 }
 
