@@ -9,18 +9,19 @@ const socket = io(SOCKET_SERVER_URL, {
 });
 
 const setUpSocket = () => {
-  socket.on("test", data => {
-    console.log(data);
-  });
+  const submitNickname = nickname => {
+    socket.emit("submitNickname", { nickname });
+  };
 
-  const emitTest = data => {
-    socket.emit("test", {
-      data,
+  const onUpdateUsers = callback => {
+    socket.on("updateUsers", userList => {
+      callback(userList);
     });
   };
 
   return {
-    emitTest,
+    submitNickname,
+    onUpdateUsers,
   };
 };
 

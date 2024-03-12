@@ -9,6 +9,7 @@ import { INPUT_FORM_STYLE } from "../../utils/styleConstants";
 function Form() {
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
+  const socketService = setUpSocket();
 
   const isInputValid = () => inputValue.length >= 2;
 
@@ -16,17 +17,11 @@ function Form() {
     setInputValue(e.target.value);
   };
 
-  const handleRequestSocket = () => {
-    const socketService = setUpSocket();
-
-    socketService.emitTest(inputValue);
-  };
-
   const handleSubmit = e => {
     e.preventDefault();
 
     if (isInputValid()) {
-      handleRequestSocket();
+      socketService.submitNickname(inputValue);
       navigate("/lobby");
     }
   };
