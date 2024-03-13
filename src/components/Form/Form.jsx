@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import setUpSocket from "../../services/socketService";
 import NicknameInput from "./NicknameInput";
 import ErrorMessage from "../Info/ErrorMessage";
 import Button from "../Button/Button";
+import setUpSocket from "../../services/socketService";
 import { INPUT_FORM_STYLE } from "../../utils/styleConstants";
 
 function Form() {
   const [inputValue, setInputValue] = useState("");
   const navigate = useNavigate();
   const socketService = setUpSocket();
-
   const isInputValid = () => inputValue.length >= 2;
 
   const handleChange = e => {
@@ -21,7 +20,11 @@ function Form() {
     e.preventDefault();
 
     if (isInputValid()) {
-      socketService.submitNickname(inputValue);
+      const roomNumber = 1;
+
+      socketService.joinRoom(roomNumber);
+
+      socketService.submitNickname(inputValue, roomNumber);
       navigate("/lobby");
     }
   };
