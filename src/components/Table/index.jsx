@@ -27,8 +27,8 @@ function Table() {
   }
 
   return (
-    <table className="text-center font-weight-bold w-96 h-80 bg-background-100 opacity-60">
-      <caption className="text-3xl text-text-50 font-bold mb-4">
+    <table className="text-center font-bold w-96 h-80 bg-background-100 opacity-60">
+      <caption className="text-2xl text-text-50 font-bold mb-4">
         Participants List
       </caption>
       <thead>
