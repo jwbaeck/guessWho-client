@@ -30,6 +30,10 @@ const setUpSocket = () => {
     });
   };
 
+  const onRoleInfo = callback => {
+    socket.on("roleInfo", callback);
+  };
+
   const removeAllListeners = () => {
     socket.removeAllListeners();
   };
@@ -39,6 +43,7 @@ const setUpSocket = () => {
     onUpdateUsers,
     joinRoom,
     onMaxCapacityReached,
+    onRoleInfo,
     removeAllListeners,
   };
 };
