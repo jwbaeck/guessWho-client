@@ -1,6 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
 import MAX_USERS from "../../utils/constants";
+import {
+  LOBBY_BUTTON_STYLE,
+  LOBBY_BUTTON_STYLE_WHEN_DISABLED,
+} from "../../utils/styleConstants";
 
 function LobbyButton({ usersCount, maxUsers = MAX_USERS }) {
   const navigate = useNavigate();
@@ -12,7 +16,7 @@ function LobbyButton({ usersCount, maxUsers = MAX_USERS }) {
     }
   };
 
-  const buttonStyle = `text-xl ${isRoomFull ? "text-warn-500 border-blue-500" : "text-gray-500 border-gray-500"} opacity-100 border-2 px-4 py-2 rounded`;
+  const buttonStyle = `${isRoomFull ? LOBBY_BUTTON_STYLE : LOBBY_BUTTON_STYLE_WHEN_DISABLED}`;
 
   return (
     <button
@@ -21,7 +25,7 @@ function LobbyButton({ usersCount, maxUsers = MAX_USERS }) {
       onClick={handleClick}
       disabled={!isRoomFull}
     >
-      Check My Mission
+      미션 확인하기
     </button>
   );
 }
