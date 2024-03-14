@@ -4,7 +4,7 @@ import useLobbyStore from "../../stores/useLobbyStore";
 import MAX_USERS from "../../utils/constants";
 
 function Table() {
-  const { users, setUsers } = useLobbyStore();
+  const { users, setUsers, setIsLiar } = useLobbyStore();
 
   useEffect(() => {
     const socketService = setUpSocket();
@@ -14,6 +14,10 @@ function Table() {
     };
 
     socketService.onUpdateUsers(handleUpdateUsers);
+
+    socketService.onRoleInfo(({ isLiar }) => {
+      setIsLiar(isLiar);
+    });
 
     return () => {
       socketService.removeAllListeners();
