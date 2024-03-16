@@ -24,11 +24,12 @@ module.exports = {
     "react/self-closing-comp": "off",
     "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": ["warn", { extensions: [".js", ".jsx"] }],
-    "no-param-reassign": "error",
+    "no-param-reassign": ["error", { "props": false }],
     "no-underscore-dangle": "off",
     "react-refresh/only-export-components": [
       "warn",
       { allowConstantExport: true },
     ],
+    "no-bitwise": "off",
   },
 };
