@@ -13,6 +13,12 @@ const useLobbyStore = create(set => ({
       ),
     })),
   usersCount: () => set(state => state.users.length),
+  setUserEntered: (userId, hasEntered) =>
+    set(state => ({
+      users: state.users.map(user =>
+        user.id === userId ? { ...user, hasEntered } : user,
+      ),
+    })),
 }));
 
 export default useLobbyStore;
