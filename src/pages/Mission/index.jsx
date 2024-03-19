@@ -5,7 +5,7 @@ import ChatEntranceButton from "../../components/Button/ChatEntranceButton";
 import Modal from "../../components/Modal";
 import MissionRoomTheme from "../../assets/mission_room_theme.png";
 import useLobbyStore from "../../stores/useLobbyStore";
-import { THEME_IMAGE_STYLE } from "../../utils/styleConstants";
+import { PAGE_STYLE, THEME_IMAGE_STYLE } from "../../utils/styleConstants";
 
 function MissionRoom() {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -20,7 +20,7 @@ function MissionRoom() {
   const handleCloseModal = () => setIsModalOpen(false);
 
   return (
-    <div className="flex items-center justify-center min-h-screen relative">
+    <div className={PAGE_STYLE}>
       <img
         className={THEME_IMAGE_STYLE}
         src={MissionRoomTheme}
