@@ -41,6 +41,10 @@ const setUpSocket = () => {
       socket.on("userEntered", callback);
     };
 
+    const onGameStart = callback => {
+      socket.on("gameStart", callback);
+    };
+
     const enterChatRoom = () => {
       socket.emit("userEnteredChatRoom");
     };
@@ -81,6 +85,7 @@ const setUpSocket = () => {
       removeAllListeners,
       onUserEntered,
       enterChatRoom,
+      onGameStart,
       onWebRTCOffer,
       onWebRTCAnswer,
       onWebRTCIceCandidate,
