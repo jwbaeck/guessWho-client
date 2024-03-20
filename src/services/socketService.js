@@ -17,6 +17,10 @@ const setUpSocket = () => {
       socket.emit("submitNickname", { nickname, roomNumber });
     };
 
+    const onReceiveSocketId = callback => {
+      socket.on("yourSocketId", callback);
+    };
+
     const onUpdateUsers = callback => {
       socket.on("updateUsers", callback);
     };
@@ -78,6 +82,7 @@ const setUpSocket = () => {
     socketInstance = {
       socket,
       submitNickname,
+      onReceiveSocketId,
       onUpdateUsers,
       joinRoom,
       onMaxCapacityReached,
