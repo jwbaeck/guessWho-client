@@ -52,3 +52,9 @@ export const GAME_TIMER_STYLE =
 
 export const GO_TO_VOTE_STYLE =
   "absolute bottom-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white text-xl font-bold py-2 px-4 rounded mb-10";
+
+export const VOTE_TABLE_STYLE =
+  "lg:w-2/5 xl:w-1/3 mx-auto mt-10 text-left bg-black opacity-50 border-solid";
+
+export const CHECK_BOX_STYLE =
+  "w-6 h-6 text-blue-600 bg-gray-100 rounded border-gray-300 focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600";
