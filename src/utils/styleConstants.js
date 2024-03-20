@@ -30,6 +30,10 @@ export const THEME_IMAGE_STYLE = "w-full h-full object-cover absolute z-[-1]";
 export const CAMERA_GRID_STYLE =
   "grid grid-cols-2 gap-5 max-w-screen-lg mx-auto";
 
+export const CAMERA_GRID_TRANSFORM_STYLE = {
+  transform: "translateX(10%) translateY(-18%)",
+};
+
 export const CAMERA_AREA_STYLE = "relative w-3/5 text-center";
 
 export const VIDEO_STYLE = "w-full h-auto";
@@ -38,4 +42,13 @@ export const USER_NAME_AREA_STYLE =
   "absolute bottom-0 w-full bg-black bg-opacity-50 text-white text-lg p-1";
 
 export const ENTRANCE_MESSAGE_STYLE =
-  "fixed top-0 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white p-2 rounded-md mt-4 flex items-center";
+  "bg-blue-500 text-white p-2 rounded-md mb-2 flex items-center";
+
+export const ENTRANCE_MESSAGE_CONTAINER_STYLE =
+  "fixed top-4 left-1/2 transform -translate-x-1/2 mt-4 space-y-2 z-10 flex flex-col items-center";
+
+export const GAME_TIMER_STYLE =
+  "fixed right-5 top-5 flex items-center space-x-2 text-white text-2xl";
+
+export const GO_TO_VOTE_STYLE =
+  "absolute bottom-5 left-1/2 transform -translate-x-1/2 bg-blue-500 text-white text-xl font-bold py-2 px-4 rounded mb-10";
