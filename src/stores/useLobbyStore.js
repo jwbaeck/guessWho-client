@@ -3,8 +3,10 @@ import { create } from "zustand";
 const useLobbyStore = create(set => ({
   users: [],
   isLiar: null,
+  currentUserId: null,
   setUsers: users => set(() => ({ users })),
   setIsLiar: isLiar => set({ isLiar }),
+  setCurrentUserId: currentUserId => set({ currentUserId }),
   addUser: user => set(state => ({ users: [...state.users, user] })),
   updateUserStream: (userId, stream) =>
     set(state => ({
