@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { IoEnter } from "react-icons/io5";
 import { ENTRANCE_MESSAGE_STYLE } from "../../utils/styleConstants";
 
-function EntranceMessage({ userName, onHide }) {
+function EntranceMessage({ userName }) {
   const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
@@ -12,7 +12,7 @@ function EntranceMessage({ userName, onHide }) {
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [onHide]);
+  }, []);
 
   if (!isVisible) {
     return null;
@@ -28,7 +28,6 @@ function EntranceMessage({ userName, onHide }) {
 
 EntranceMessage.propTypes = {
   userName: PropTypes.string.isRequired,
-  onHide: PropTypes.func.isRequired,
 };
 
 export default EntranceMessage;
