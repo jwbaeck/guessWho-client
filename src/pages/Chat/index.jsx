@@ -1,28 +1,60 @@
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import EntranceMessage from "./EntranceMessage";
 import Camera from "./Camera";
 import ChatTheme from "../../assets/chat_theme.png";
+import GameTimer from "./GameTimer";
+import VoteButton from "./VoteButton";
 import useLobbyStore from "../../stores/useLobbyStore";
 import setUpSocket from "../../services/socketService";
 import {
   PAGE_STYLE,
   THEME_IMAGE_STYLE,
   CAMERA_GRID_STYLE,
+  CAMERA_GRID_TRANSFORM_STYLE,
+  ENTRANCE_MESSAGE_CONTAINER_STYLE,
 } from "../../utils/styleConstants";
 
 function ChatRoom() {
   const { users, updateUserStream, setUserEntered } = useLobbyStore();
   const [entranceMessages, setEntranceMessages] = useState([]);
+  const [gameStartTime, setGameStartTime] = useState(null);
+  const [isTimeUp, setIsTimeUp] = useState(false);
   const socketService = setUpSocket();
+  const navigate = useNavigate();
   const peerConnections = useRef({});
 
   const handleUserEntrance = userId => {
     const foundUser = users.find(user => user.id === userId);
 
-    if (foundUser && !entranceMessages.includes(foundUser.name)) {
-      setEntranceMessages(prev => [...prev, foundUser.name]);
+    if (
+      foundUser &&
+      !entranceMessages.some(msg => msg.userId === foundUser.id)
+    ) {
+      const updatedMessages = users
+        .filter(user => user.hasEntered)
+        .map(user => ({
+          userId: user.id,
+          name: user.name,
+          key: `${user.id}-${Date.now()}`,
+        }));
+
+      setEntranceMessages(updatedMessages);
       setUserEntered(userId, true);
     }
+  };
+
+  const handleVoteButtonClick = () => {
+    users.forEach(user => {
+      if (user.stream) {
+        user.stream.getTracks().forEach(track => track.stop());
+      }
+    });
+
+    socketService.removeAllListeners();
+    Object.values(peerConnections.current).forEach(pc => pc.close());
+
+    navigate("/vote-room");
   };
 
   const setupWebRTCEvents = () => {
@@ -57,6 +89,11 @@ function ChatRoom() {
   useEffect(() => {
     socketService.enterChatRoom();
     socketService.onUserEntered(handleUserEntrance);
+
+    socketService.onGameStart(({ startTime }) => {
+      setGameStartTime(startTime);
+    });
+
     setupWebRTCEvents();
 
     return () => {
@@ -77,37 +114,28 @@ function ChatRoom() {
     });
   }, [users]);
 
-  const handleHideMessage = userId => {
-    setEntranceMessages(prevMessages =>
-      prevMessages.map(msg =>
-        msg.id === userId ? { ...msg, isVisible: false } : msg,
-      ),
-    );
-  };
-
   return (
     <div className={PAGE_STYLE}>
       <img className={THEME_IMAGE_STYLE} src={ChatTheme} alt="Chat Theme" />
-      {entranceMessages.map(
-        msg =>
-          msg.isVisible && (
-            <EntranceMessage
-              key={msg.id}
-              userName={msg.name}
-              onHide={() => handleHideMessage(msg.id)}
-            />
-          ),
+      {gameStartTime && (
+        <GameTimer
+          startTime={gameStartTime}
+          onTimeUp={() => setIsTimeUp(true)}
+        />
       )}
-      <div
-        className={CAMERA_GRID_STYLE}
-        style={{ transform: "translateX(10%) translateY(-18%)" }}
-      >
+      <div className={ENTRANCE_MESSAGE_CONTAINER_STYLE}>
+        {entranceMessages.map(msg => (
+          <EntranceMessage key={msg.key} userName={msg.name} />
+        ))}
+      </div>
+      <div className={CAMERA_GRID_STYLE} style={CAMERA_GRID_TRANSFORM_STYLE}>
         {users
           .filter(user => user.hasEntered)
           .map(user => (
             <Camera key={user.id} nickname={user.name} stream={user.stream} />
           ))}
       </div>
+      <VoteButton isActive={isTimeUp} onClick={handleVoteButtonClick} />
     </div>
   );
 }
