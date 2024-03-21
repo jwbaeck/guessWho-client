@@ -1,13 +1,14 @@
-import { useState } from "react";
+import PropTypes from "prop-types";
 import useLobbyStore from "../../stores/useLobbyStore";
 import { VOTE_TABLE_STYLE, CHECK_BOX_STYLE } from "../../utils/styleConstants";
 
-function VoteTable() {
+function VoteTable({ setSelectedUserId }) {
   const { users, currentUserId } = useLobbyStore();
-  const [selectedUserId, setSelectedUserId] = useState(null);
 
-  const handleVoteChange = userId => {
-    setSelectedUserId(userId);
+  const handleVoteChange = (event, userId) => {
+    const isChecked = event.target.checked;
+
+    setSelectedUserId(isChecked ? userId : null);
   };
 
   const filteredUsers = users.filter(user => user.id !== currentUserId);
@@ -37,11 +38,11 @@ function VoteTable() {
               </label>
               <input
                 id={`vote-${user.id}`}
-                type="checkbox"
+                type="radio"
+                name="vote"
                 className={CHECK_BOX_STYLE}
-                checked={selectedUserId === user.id}
-                onChange={() => handleVoteChange(user.id)}
-                aria-labelledby={`voteLabel-${user.id}`}
+                onChange={event => handleVoteChange(event, user.id)}
+                aria-label={`Vote for ${user.name}`}
               />
             </td>
           </tr>
@@ -50,5 +51,9 @@ function VoteTable() {
     </table>
   );
 }
+
+VoteTable.propTypes = {
+  setSelectedUserId: PropTypes.func.isRequired,
+};
 
 export default VoteTable;
