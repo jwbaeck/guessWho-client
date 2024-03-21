@@ -4,6 +4,7 @@ import VoteTable from "./VoteTable";
 import VotingButton from "./VotingButton";
 import ResultButton from "./ResultButton";
 import setUpSocket from "../../services/socketService";
+import useGameResultStore from "../../stores/useGameResultStore";
 
 function VotingForm() {
   const [selectedUserId, setSelectedUserId] = useState(null);
@@ -12,6 +13,8 @@ function VotingForm() {
 
   useEffect(() => {
     socket.onVoteResults(data => {
+      useGameResultStore.getState().setGameResult(data);
+
       setResultAvailable(true);
     });
 
@@ -29,15 +32,11 @@ function VotingForm() {
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <VoteDescription />
-      <div className="w-full flex justify-center">
-        <VoteTable
-          selectedUserId={selectedUserId}
-          setSelectedUserId={setSelectedUserId}
-        />
-      </div>
-      <div className="w-full flex justify-center mt-5">
-        <VotingButton onVoteSubmit={submitVote} disabled={!selectedUserId} />
-      </div>
+      <VoteTable
+        selectedUserId={selectedUserId}
+        setSelectedUserId={setSelectedUserId}
+      />
+      <VotingButton onVoteSubmit={submitVote} disabled={!selectedUserId} />
       <ResultButton disabled={!resultAvailable} />
     </div>
   );
