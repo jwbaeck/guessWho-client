@@ -36,6 +36,8 @@ export const CAMERA_GRID_TRANSFORM_STYLE = {
 
 export const CAMERA_AREA_STYLE = "relative w-3/5 text-center";
 
+export const SELECTED_CAMERA_STYLE = "border-4 border-warn-500";
+
 export const VIDEO_STYLE = "w-full h-auto";
 
 export const USER_NAME_AREA_STYLE =
