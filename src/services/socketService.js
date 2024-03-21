@@ -53,6 +53,14 @@ const setUpSocket = () => {
       socket.emit("userEnteredChatRoom");
     };
 
+    const submitVote = vote => {
+      socket.emit("submitVote", vote);
+    };
+
+    const onVoteResults = callback => {
+      socket.on("voteResults", callback);
+    };
+
     const onWebRTCOffer = callback => {
       socket.on("webRTC-offer", ({ sender, sdp }) => callback(sender, sdp));
     };
@@ -91,6 +99,8 @@ const setUpSocket = () => {
       onUserEntered,
       enterChatRoom,
       onGameStart,
+      submitVote,
+      onVoteResults,
       onWebRTCOffer,
       onWebRTCAnswer,
       onWebRTCIceCandidate,
