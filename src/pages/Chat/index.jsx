@@ -10,6 +10,7 @@ import ChatTheme from "../../assets/chat_theme.png";
 import useLobbyStore from "../../stores/useLobbyStore";
 import useGameResultStore from "../../stores/useGameResultStore";
 import setUpSocket from "../../services/socketService";
+import { determineImageForUsers } from "../../utils/gameUtils";
 import {
   PAGE_STYLE,
   THEME_IMAGE_STYLE,
@@ -20,6 +21,7 @@ import {
 function ChatRoom() {
   const { users, currentUserId, updateUserStream, setUserEntered } =
     useLobbyStore();
+  const { isLiarCorrectlyIdentified } = useGameResultStore();
   const [entranceMessages, setEntranceMessages] = useState([]);
   const [gameStartTime, setGameStartTime] = useState(null);
   const [isTimeUp, setIsTimeUp] = useState(false);
@@ -28,6 +30,7 @@ function ChatRoom() {
   const [isVoted, setIsVoted] = useState(false);
   const [isResultsReady, setIsResultsReady] = useState(false);
   const [showResultModal, setShowResultModal] = useState(false);
+  const [usersWithImages, setUsersWithImages] = useState([]);
   const socketService = setUpSocket();
   const peerConnections = useRef({});
   const setGameResult = useGameResultStore(state => state.setGameResult);
@@ -65,14 +68,6 @@ function ChatRoom() {
       setIsVoted(true);
       socketService.submitVote({ userId: selectedUser.id });
     }
-  };
-
-  const handleResultButtonClick = () => {
-    setShowResultModal(true);
-  };
-
-  const handleCloseResultModal = () => {
-    setShowResultModal(false);
   };
 
   const setupWebRTCEvents = () => {
@@ -155,6 +150,21 @@ function ChatRoom() {
     }
   }, [isTimeUp, users]);
 
+  const handleResultButtonClick = () => {
+    setShowResultModal(true);
+
+    const updatedUsersWithImages = determineImageForUsers(
+      users,
+      isLiarCorrectlyIdentified,
+    );
+
+    setUsersWithImages(updatedUsersWithImages);
+  };
+
+  const handleCloseResultModal = () => {
+    setShowResultModal(false);
+  };
+
   return (
     <div className={PAGE_STYLE}>
       <img className={THEME_IMAGE_STYLE} src={ChatTheme} alt="Chat Theme" />
@@ -181,6 +191,7 @@ function ChatRoom() {
                 isSelected={selectedNickname === user.name}
                 onSelect={handleSelectCamera}
                 userId={user.id}
+                imageToShow={usersWithImages.find(u => u.id === user.id)?.image}
               />
             ))}
         </div>

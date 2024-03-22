@@ -7,14 +7,21 @@ import {
   SELECTED_CAMERA_STYLE,
 } from "../../utils/styleConstants";
 
-function Camera({ nickname, userId, stream, isSelected, onSelect }) {
+function Camera({
+  nickname,
+  userId,
+  stream,
+  isSelected,
+  onSelect,
+  imageToShow,
+}) {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    if (videoRef.current) {
+    if (videoRef.current && !imageToShow) {
       videoRef.current.srcObject = stream;
     }
-  }, [stream]);
+  }, [stream, imageToShow]);
 
   const handleCameraClick = () => {
     onSelect(nickname, userId);
@@ -34,9 +41,13 @@ function Camera({ nickname, userId, stream, isSelected, onSelect }) {
       role="button"
       tabIndex={0}
     >
-      <video ref={videoRef} autoPlay playsInline className={VIDEO_STYLE}>
-        <track kind="captions" />
-      </video>
+      {imageToShow ? (
+        <img src={imageToShow} alt="User" className={VIDEO_STYLE} />
+      ) : (
+        <video ref={videoRef} autoPlay playsInline className={VIDEO_STYLE}>
+          <track kind="captions" />
+        </video>
+      )}
       <div className={USER_NAME_AREA_STYLE}>{nickname}</div>
     </div>
   );
@@ -44,6 +55,7 @@ function Camera({ nickname, userId, stream, isSelected, onSelect }) {
 
 Camera.defaultProps = {
   stream: null,
+  imageToShow: null,
 };
 
 Camera.propTypes = {
@@ -54,6 +66,7 @@ Camera.propTypes = {
   }),
   isSelected: PropTypes.bool.isRequired,
   onSelect: PropTypes.func.isRequired,
+  imageToShow: PropTypes.string,
 };
 
 export default Camera;
