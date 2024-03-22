@@ -1,17 +1,19 @@
 import { useState, useEffect, useRef } from "react";
+import GameTimer from "./GameTimer";
 import EntranceMessage from "./EntranceMessage";
 import Camera from "./Camera";
-import ChatTheme from "../../assets/chat_theme.png";
-import GameTimer from "./GameTimer";
 import TimeoutModal from "./TimeoutModal";
 import VoteButton from "./VoteButton";
+import ResultButton from "./ResultButton";
+import ResultModal from "./ResultModal";
+import ChatTheme from "../../assets/chat_theme.png";
 import useLobbyStore from "../../stores/useLobbyStore";
+import useGameResultStore from "../../stores/useGameResultStore";
 import setUpSocket from "../../services/socketService";
 import {
   PAGE_STYLE,
   THEME_IMAGE_STYLE,
   CAMERA_GRID_STYLE,
-  CAMERA_GRID_TRANSFORM_STYLE,
   ENTRANCE_MESSAGE_CONTAINER_STYLE,
 } from "../../utils/styleConstants";
 
@@ -24,8 +26,11 @@ function ChatRoom() {
   const [showModal, setShowModal] = useState(false);
   const [selectedNickname, setSelectedNickname] = useState(null);
   const [isVoted, setIsVoted] = useState(false);
+  const [isResultsReady, setIsResultsReady] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
   const socketService = setUpSocket();
   const peerConnections = useRef({});
+  const setGameResult = useGameResultStore(state => state.setGameResult);
 
   const handleUserEntrance = userId => {
     const foundUser = users.find(user => user.id === userId);
@@ -60,6 +65,14 @@ function ChatRoom() {
       setIsVoted(true);
       socketService.submitVote({ userId: selectedUser.id });
     }
+  };
+
+  const handleResultButtonClick = () => {
+    setShowResultModal(true);
+  };
+
+  const handleCloseResultModal = () => {
+    setShowResultModal(false);
   };
 
   const setupWebRTCEvents = () => {
@@ -130,6 +143,15 @@ function ChatRoom() {
       });
 
       setShowModal(true);
+
+      const handleVoteResults = data => {
+        console.log(data);
+
+        setGameResult(data);
+        setIsResultsReady(true);
+      };
+
+      socketService.onVoteResults(handleVoteResults);
     }
   }, [isTimeUp, users]);
 
@@ -147,26 +169,34 @@ function ChatRoom() {
           <EntranceMessage key={msg.key} userName={msg.name} />
         ))}
       </div>
-      <div className={CAMERA_GRID_STYLE} style={CAMERA_GRID_TRANSFORM_STYLE}>
-        {users
-          .filter(user => user.hasEntered)
-          .map(user => (
-            <Camera
-              key={user.id}
-              nickname={user.name}
-              stream={user.stream}
-              isSelected={selectedNickname === user.name}
-              onSelect={handleSelectCamera}
-              userId={user.id}
-            />
-          ))}
+      <div className="flex flex-col items-center">
+        <div className={CAMERA_GRID_STYLE}>
+          {users
+            .filter(user => user.hasEntered)
+            .map(user => (
+              <Camera
+                key={user.id}
+                nickname={user.name}
+                stream={user.stream}
+                isSelected={selectedNickname === user.name}
+                onSelect={handleSelectCamera}
+                userId={user.id}
+              />
+            ))}
+        </div>
+        {showModal && <TimeoutModal onClose={() => setShowModal(false)} />}
+        <VoteButton
+          onClick={handleVoteButtonClick}
+          isTimeUp={isTimeUp}
+          isVoted={isVoted}
+        />
+        <ResultButton
+          disabled={!isResultsReady}
+          isVoted={isVoted}
+          onClick={handleResultButtonClick}
+        />
+        {showResultModal && <ResultModal onClose={handleCloseResultModal} />}
       </div>
-      {showModal && <TimeoutModal onClose={() => setShowModal(false)} />}
-      <VoteButton
-        onClick={handleVoteButtonClick}
-        isActive={isTimeUp}
-        isVoted={isVoted}
-      />
     </div>
   );
 }
