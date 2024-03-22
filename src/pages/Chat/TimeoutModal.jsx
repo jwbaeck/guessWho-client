@@ -1,10 +1,11 @@
 import PropTypes from "prop-types";
 import { IoMdAlert } from "react-icons/io";
 import { IoCloseCircle } from "react-icons/io5";
+import { MODAL_STYLE } from "../../utils/styleConstants";
 
 function TimeoutModal({ onClose }) {
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <div className={MODAL_STYLE}>
       <div className="bg-white text-center p-10 rounded-lg">
         <h2 className="text-2xl text-warn-800 font-bold">
           <IoMdAlert className="inline mr-2 mb-2" />

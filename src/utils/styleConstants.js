@@ -61,3 +61,6 @@ export const RESULT_BUTTON_STYLE =
 
 export const RESULT_BUTTON_STYLE_WHEN_DISABLED =
   "text-xl text-gray-500 font-bold border-4 opacity-100 px-4 py-2 rounded border-gray-500 mt-10";
+
+export const MODAL_STYLE =
+  "fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center";
