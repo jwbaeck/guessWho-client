@@ -42,7 +42,7 @@ export const ENTRANCE_MESSAGE_STYLE =
   "bg-blue-500 text-white p-2 rounded-md mb-2 flex items-center";
 
 export const ENTRANCE_MESSAGE_CONTAINER_STYLE =
-  "fixed top-4 left-1/2 transform -translate-x-1/2 mt-4 space-y-2 z-10 flex flex-col items-center";
+  "fixed top-16 left-1/2 transform -translate-x-1/2 mt-4 space-y-2 z-10 flex flex-col items-center max-h-[30%] overflow-y-auto";
 
 export const GAME_TIMER_STYLE =
   "fixed right-5 top-5 flex items-center space-x-2 text-white text-2xl";
