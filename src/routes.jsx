@@ -3,8 +3,6 @@ import Home from "./pages/Home";
 import Lobby from "./pages/Lobby";
 import MissionRoom from "./pages/Mission";
 import ChatRoom from "./pages/Chat";
-import VoteRoom from "./pages/Vote";
-import ResultRoom from "./pages/Result";
 
 const routes = [
   {
@@ -14,10 +12,8 @@ const routes = [
       { path: "/lobby", element: <Lobby /> },
       { path: "/mission-room", element: <MissionRoom /> },
       { path: "/chat-room", element: <ChatRoom /> },
-      { path: "/vote-room", element: <VoteRoom /> },
-      { path: "/result-room", element: <ResultRoom /> },
     ],
-  }
+  },
 ];
 
 export default routes;
