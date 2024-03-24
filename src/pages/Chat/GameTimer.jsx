@@ -43,7 +43,7 @@ function GameTimer({ startTime, onTimeUp }) {
 }
 
 GameTimer.propTypes = {
-  startTime: PropTypes.func.isRequired,
+  startTime: PropTypes.number.isRequired,
   onTimeUp: PropTypes.func.isRequired,
 };
 
