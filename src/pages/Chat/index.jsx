@@ -130,13 +130,7 @@ function ChatRoom() {
                 }
               }}
             >
-              <track
-                kind="captions"
-                src="/path/to/captions.vtt"
-                srcLang="en"
-                label="English"
-                default
-              />
+              <track kind="captions" />
             </video>
           ))}
       </div>
