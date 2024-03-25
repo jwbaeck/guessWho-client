@@ -8,7 +8,8 @@ import useLobbyStore from "../../stores/useLobbyStore";
 import setUpSocket from "../../services/socketService";
 
 function ChatRoom() {
-  const { users, currentUserId, updateUserStream } = useLobbyStore();
+  const { users, currentUserId, updateUserStream, setUserEntered } =
+    useLobbyStore();
   const socketService = useRef(null);
   const peerConnections = useRef({});
   const localStreamRef = useRef(null);
@@ -25,6 +26,7 @@ function ChatRoom() {
 
       updateUserStream(currentUserId, stream);
       socketService.current.enterChatRoom();
+      setUserEntered(currentUserId, true);
     };
 
     setupLocalStream();
@@ -37,6 +39,7 @@ function ChatRoom() {
 
         peerConnection.ontrack = event => {
           updateUserStream(userId, event.streams[0]);
+          setUserEntered(userId, true);
         };
 
         peerConnection.onicecandidate = event => {
@@ -113,27 +116,29 @@ function ChatRoom() {
   return (
     <div className={PAGE_STYLE}>
       <div className={CAMERA_GRID_STYLE}>
-        {users.map(user => (
-          <video
-            key={user.id}
-            autoPlay
-            playsInline
-            className={CAMERA_AREA_STYLE}
-            ref={el => {
-              if (el && user.stream) {
-                el.srcObject = user.stream;
-              }
-            }}
-          >
-            <track
-              kind="captions"
-              src="/path/to/captions.vtt"
-              srcLang="en"
-              label="English"
-              default
-            />
-          </video>
-        ))}
+        {users
+          .filter(user => user.hasEntered)
+          .map(user => (
+            <video
+              key={user.id}
+              autoPlay
+              playsInline
+              className={CAMERA_AREA_STYLE}
+              ref={el => {
+                if (el && user.stream) {
+                  el.srcObject = user.stream;
+                }
+              }}
+            >
+              <track
+                kind="captions"
+                src="/path/to/captions.vtt"
+                srcLang="en"
+                label="English"
+                default
+              />
+            </video>
+          ))}
       </div>
     </div>
   );
