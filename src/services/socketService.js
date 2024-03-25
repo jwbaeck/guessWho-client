@@ -62,17 +62,21 @@ const setUpSocket = () => {
     };
 
     const onWebRTCOffer = callback => {
-      socket.on("webRTC-offer", ({ sender, sdp }) => callback(sender, sdp));
+      socket.on("webRTC-offer", data => {
+        callback(data);
+      });
     };
 
     const onWebRTCAnswer = callback => {
-      socket.on("webRTC-answer", ({ sender, sdp }) => callback(sender, sdp));
+      socket.on("webRTC-answer", data => {
+        callback(data);
+      });
     };
 
     const onWebRTCIceCandidate = callback => {
-      socket.on("webRTC-candidate", ({ sender, candidate }) =>
-        callback(sender, candidate),
-      );
+      socket.on("webRTC-candidate", data => {
+        callback(data.sender, data.candidate);
+      });
     };
 
     const sendWebRTCOffer = (target, description) => {
