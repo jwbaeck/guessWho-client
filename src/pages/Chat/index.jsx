@@ -111,7 +111,7 @@ function ChatRoom() {
       socketService.current.removeAllListeners();
       peerConnections.current = {};
     };
-  }, [currentUserId, updateUserStream]);
+  }, [currentUserId, updateUserStream, setUserEntered]);
 
   return (
     <div className={PAGE_STYLE}>
