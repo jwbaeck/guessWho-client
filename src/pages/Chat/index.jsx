@@ -97,16 +97,15 @@ function ChatRoom() {
 
     setupLocalStream();
 
-    socketService.current.onUserEntered(async data => {
-      const userId = data;
-
-      if (userId !== currentUserId) {
-        const peerConnection = await setupPeerConnection(userId);
-        const offer = await peerConnection.createOffer();
-
-        await peerConnection.setLocalDescription(offer);
-
-        socketService.current.sendWebRTCOffer(userId, offer);
+    socketService.current.onUserEntered(newUserId => {
+      if (newUserId !== currentUserId) {
+        setupPeerConnection(newUserId).then(peerConnection => {
+          const offer = peerConnection.createOffer();
+          offer.then(o => {
+            peerConnection.setLocalDescription(o);
+            socketService.current.sendWebRTCOffer(newUserId, o);
+          });
+        });
       }
     });
 
@@ -148,7 +147,7 @@ function ChatRoom() {
       socketService.current.removeAllListeners();
       peerConnections.current = {};
     };
-  }, [currentUserId, updateUserStream, setUserEntered]);
+  }, [currentUserId, updateUserStream, setUserEntered, socketService.current]);
 
   useEffect(() => {
     console.log("Users updated:", users);
