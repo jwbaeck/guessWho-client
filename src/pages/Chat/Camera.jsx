@@ -1,14 +1,15 @@
 import { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
-import { CAMERA_AREA_STYLE, VIDEO_STYLE } from "../../utils/styleConstants";
+import {
+  CAMERA_AREA_STYLE,
+  VIDEO_STYLE,
+  USER_NAME_AREA_STYLE,
+} from "../../utils/styleConstants";
 
-function Camera({ stream }) {
+function Camera({ nickname, stream }) {
   const videoRef = useRef(null);
 
   useEffect(() => {
-    console.log("미디어스트림을 위한 카메라");
-    console.log(stream);
-
     if (videoRef.current) {
       videoRef.current.srcObject = stream;
     }
@@ -25,6 +26,7 @@ function Camera({ stream }) {
       >
         <track kind="captions" />
       </video>
+      <div className={USER_NAME_AREA_STYLE}>{nickname}</div>
     </div>
   );
 }
@@ -34,6 +36,7 @@ Camera.defaultProps = {
 };
 
 Camera.propTypes = {
+  nickname: PropTypes.string.isRequired,
   stream: PropTypes.shape({
     getTracks: PropTypes.func,
   }),
