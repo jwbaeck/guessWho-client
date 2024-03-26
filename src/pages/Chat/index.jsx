@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import ChatTheme from "../../assets/chat_theme.png";
 import {
   PAGE_STYLE,
@@ -11,7 +11,13 @@ import setUpSocket from "../../services/socketService";
 
 function ChatRoom() {
   const { users, currentUserId, updateUserStream, setUserEntered } =
-    useLobbyStore();
+    useLobbyStore(state => ({
+      users: state.users,
+      currentUserId: state.currentUserId,
+      updateUserStream: state.updateUserStream,
+      setUserEntered: state.setUserEntered,
+    }));
+
   const socketService = useRef(null);
   const peerConnections = useRef({});
   const localStreamRef = useRef(null);
@@ -25,6 +31,7 @@ function ChatRoom() {
           video: true,
           audio: true,
         });
+
         localStreamRef.current = stream;
         updateUserStream(currentUserId, stream);
         socketService.current.enterChatRoom();
@@ -136,6 +143,10 @@ function ChatRoom() {
       peerConnections.current = {};
     };
   }, [currentUserId, updateUserStream, setUserEntered]);
+
+  useEffect(() => {
+    console.log("Users updated:", users);
+  }, [users]);
 
   return (
     <div className={PAGE_STYLE}>

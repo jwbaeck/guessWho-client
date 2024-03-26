@@ -11,7 +11,7 @@ const useLobbyStore = create(set => ({
   updateUserStream: (userId, stream) =>
     set(state => ({
       users: state.users.map(user =>
-        user.id === userId ? { ...user, stream } : user,
+        user.id === userId ? { ...user, stream, hasEntered: true } : user,
       ),
     })),
   usersCount: () => set(state => state.users.length),
