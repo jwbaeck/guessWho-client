@@ -3,20 +3,29 @@ import GameTimer from "./GameTimer";
 import Camera from "./Camera";
 import TimeoutModal from "./TimeoutModal";
 import VoteButton from "./VoteButton";
+import ResultButton from "./ResultButton";
+import ResultModal from "./ResultModal";
 import ChatTheme from "../../assets/chat_theme.png";
+import useLobbyStore from "../../stores/useLobbyStore";
+import useGameResultStore from "../../stores/useGameResultStore";
+import setUpSocket from "../../services/socketService";
+import { determineImageForUsers } from "../../utils/gameUtils";
 import {
   PAGE_STYLE,
   THEME_IMAGE_STYLE,
   CAMERA_GRID_STYLE,
 } from "../../utils/styleConstants";
-import useLobbyStore from "../../stores/useLobbyStore";
-import setUpSocket from "../../services/socketService";
 
 function ChatRoom() {
   const [enteredCount, setEnteredCount] = useState(0);
   const [gameStartTime, setGameStartTime] = useState(null);
   const [isTimeUp, setIsTimeUp] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  const [selectedNickname, setSelectedNickname] = useState(null);
+  const [isVoted, setIsVoted] = useState(false);
+  const [isResultsReady, setIsResultsReady] = useState(false);
+  const [showResultModal, setShowResultModal] = useState(false);
+  const [usersWithImages, setUsersWithImages] = useState([]);
   const { users, currentUserId, updateUserStream, setUserEntered } =
     useLobbyStore(state => ({
       users: state.users,
@@ -24,7 +33,8 @@ function ChatRoom() {
       updateUserStream: state.updateUserStream,
       setUserEntered: state.setUserEntered,
     }));
-
+  const { isLiarCorrectlyIdentified } = useGameResultStore();
+  const setGameResult = useGameResultStore(state => state.setGameResult);
   const socketService = useRef(null);
   const peerConnections = useRef({});
   const localStreamRef = useRef(null);
@@ -174,8 +184,45 @@ function ChatRoom() {
       });
 
       setShowModal(true);
+
+      const handleVoteResults = data => {
+        setGameResult(data);
+        setIsResultsReady(true);
+      };
+
+      socketService.current.onVoteResults(handleVoteResults);
     }
   }, [isTimeUp, users]);
+
+  const handleSelectCamera = (nickname, userId) => {
+    if (isTimeUp && userId !== currentUserId) {
+      setSelectedNickname(nickname);
+    }
+  };
+
+  const handleVoteButtonClick = () => {
+    const selectedUser = users.find(user => user.name === selectedNickname);
+
+    if (selectedUser) {
+      setIsVoted(true);
+      socketService.current.submitVote({ userId: selectedUser.id });
+    }
+  };
+
+  const handleResultButtonClick = () => {
+    setShowResultModal(true);
+
+    const updatedUsersWithImages = determineImageForUsers(
+      users,
+      isLiarCorrectlyIdentified,
+    );
+
+    setUsersWithImages(updatedUsersWithImages);
+  };
+
+  const handleCloseResultModal = () => {
+    setShowResultModal(false);
+  };
 
   return (
     <div className={PAGE_STYLE}>
@@ -191,11 +238,29 @@ function ChatRoom() {
           {users
             .filter(user => user.hasEntered)
             .map(user => (
-              <Camera key={user.id} nickname={user.name} stream={user.stream} />
+              <Camera
+                key={user.id}
+                nickname={user.name}
+                stream={user.stream}
+                isSelected={selectedNickname === user.name}
+                onSelect={handleSelectCamera}
+                userId={user.id}
+                imageToShow={usersWithImages.find(u => u.id === user.id)?.image}
+              />
             ))}
         </div>
         {showModal && <TimeoutModal onClose={() => setShowModal(false)} />}
-        <VoteButton isTimeUp={isTimeUp} />
+        <VoteButton
+          onClick={handleVoteButtonClick}
+          isTimeUp={isTimeUp}
+          isVoted={isVoted}
+        />
+        <ResultButton
+          disabled={!isResultsReady}
+          isVoted={isVoted}
+          onClick={handleResultButtonClick}
+        />
+        {showResultModal && <ResultModal onClose={handleCloseResultModal} />}
       </div>
     </div>
   );
