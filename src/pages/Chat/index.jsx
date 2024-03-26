@@ -1,5 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import GameTimer from "./GameTimer";
 import Camera from "./Camera";
+import TimeoutModal from "./TimeoutModal";
+import VoteButton from "./VoteButton";
 import ChatTheme from "../../assets/chat_theme.png";
 import {
   PAGE_STYLE,
@@ -11,6 +14,9 @@ import setUpSocket from "../../services/socketService";
 
 function ChatRoom() {
   const [enteredCount, setEnteredCount] = useState(0);
+  const [gameStartTime, setGameStartTime] = useState(null);
+  const [isTimeUp, setIsTimeUp] = useState(false);
+  const [showModal, setShowModal] = useState(false);
   const { users, currentUserId, updateUserStream, setUserEntered } =
     useLobbyStore(state => ({
       users: state.users,
@@ -25,6 +31,10 @@ function ChatRoom() {
 
   useEffect(() => {
     socketService.current = setUpSocket();
+
+    socketService.current.onGameStart(({ startTime }) => {
+      setGameStartTime(startTime);
+    });
 
     const setupLocalStream = async () => {
       try {
@@ -153,15 +163,39 @@ function ChatRoom() {
     console.log("Users updated:", users);
   }, [users]);
 
+  useEffect(() => {
+    if (isTimeUp) {
+      users.forEach(user => {
+        if (user.stream) {
+          user.stream
+            .getAudioTracks()
+            .forEach(track => (track.enabled = false));
+        }
+      });
+
+      setShowModal(true);
+    }
+  }, [isTimeUp, users]);
+
   return (
     <div className={PAGE_STYLE}>
       <img src={ChatTheme} alt="Chat Theme" className={THEME_IMAGE_STYLE} />
-      <div className={CAMERA_GRID_STYLE}>
-        {users
-          .filter(user => user.hasEntered)
-          .map(user => (
-            <Camera key={user.id} stream={user.stream} />
-          ))}
+      {gameStartTime && (
+        <GameTimer
+          startTime={gameStartTime}
+          onTimeUp={() => setIsTimeUp(true)}
+        />
+      )}
+      <div className="flex flex-col items-center">
+        <div className={CAMERA_GRID_STYLE}>
+          {users
+            .filter(user => user.hasEntered)
+            .map(user => (
+              <Camera key={user.id} nickname={user.name} stream={user.stream} />
+            ))}
+        </div>
+        {showModal && <TimeoutModal onClose={() => setShowModal(false)} />}
+        <VoteButton isTimeUp={isTimeUp} />
       </div>
     </div>
   );
