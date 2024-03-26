@@ -1,6 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import ChatTheme from "../../assets/chat_theme.png";
 import {
   PAGE_STYLE,
+  THEME_IMAGE_STYLE,
   CAMERA_GRID_STYLE,
   CAMERA_AREA_STYLE,
 } from "../../utils/styleConstants";
@@ -115,6 +117,7 @@ function ChatRoom() {
 
   return (
     <div className={PAGE_STYLE}>
+      <img className={THEME_IMAGE_STYLE} src={ChatTheme} alt="Chat Theme" />
       <div className={CAMERA_GRID_STYLE}>
         {users
           .filter(user => user.hasEntered)
