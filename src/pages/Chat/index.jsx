@@ -20,18 +20,19 @@ function ChatRoom() {
     socketService.current = setUpSocket();
 
     const setupLocalStream = async () => {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
-        audio: true,
-      });
-      localStreamRef.current = stream;
-
-      updateUserStream(currentUserId, stream);
-      socketService.current.enterChatRoom();
-      setUserEntered(currentUserId, true);
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: true,
+          audio: true,
+        });
+        localStreamRef.current = stream;
+        updateUserStream(currentUserId, stream);
+        socketService.current.enterChatRoom();
+        setUserEntered(currentUserId, true);
+      } catch (error) {
+        console.error("Error setting up local stream", error);
+      }
     };
-
-    setupLocalStream();
 
     const setupPeerConnection = async userId => {
       if (!peerConnections.current[userId]) {
@@ -53,15 +54,35 @@ function ChatRoom() {
           }
         };
 
-        localStreamRef.current.getTracks().forEach(track => {
-          peerConnection.addTrack(track, localStreamRef.current);
-        });
+        const addLocalTracksToPeerConnection = (retryCount = 0) => {
+          if (localStreamRef.current) {
+            localStreamRef.current.getTracks().forEach(track => {
+              peerConnection.addTrack(track, localStreamRef.current);
+            });
+          } else if (retryCount < 5) {
+            console.log(
+              `Local stream not ready. Retrying... Attempt ${retryCount + 1}`,
+            );
+            setTimeout(
+              () => addLocalTracksToPeerConnection(retryCount + 1),
+              1500,
+            );
+          } else {
+            console.error(
+              "Failed to initialize local stream after multiple attempts.",
+            );
+          }
+        };
+
+        addLocalTracksToPeerConnection();
 
         peerConnections.current[userId] = peerConnection;
       }
 
       return peerConnections.current[userId];
     };
+
+    setupLocalStream();
 
     socketService.current.onUserEntered(async data => {
       const userId = data;
@@ -71,6 +92,7 @@ function ChatRoom() {
         const offer = await peerConnection.createOffer();
 
         await peerConnection.setLocalDescription(offer);
+
         socketService.current.sendWebRTCOffer(userId, offer);
       }
     });
@@ -117,7 +139,7 @@ function ChatRoom() {
 
   return (
     <div className={PAGE_STYLE}>
-      <img className={THEME_IMAGE_STYLE} src={ChatTheme} alt="Chat Theme" />
+      <img src={ChatTheme} alt="Chat Theme" className={THEME_IMAGE_STYLE} />
       <div className={CAMERA_GRID_STYLE}>
         {users
           .filter(user => user.hasEntered)
