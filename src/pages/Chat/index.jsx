@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import Camera from "./Camera";
 import ChatTheme from "../../assets/chat_theme.png";
 import {
   PAGE_STYLE,
@@ -10,6 +11,7 @@ import useLobbyStore from "../../stores/useLobbyStore";
 import setUpSocket from "../../services/socketService";
 
 function ChatRoom() {
+  const [enteredCount, setEnteredCount] = useState(0);
   const { users, currentUserId, updateUserStream, setUserEntered } =
     useLobbyStore(state => ({
       users: state.users,
@@ -36,6 +38,7 @@ function ChatRoom() {
         updateUserStream(currentUserId, stream);
         socketService.current.enterChatRoom();
         setUserEntered(currentUserId, true);
+        setEnteredCount(count => count + 1);
       } catch (error) {
         console.error("Error setting up local stream", error);
       }
@@ -50,6 +53,7 @@ function ChatRoom() {
         peerConnection.ontrack = event => {
           updateUserStream(userId, event.streams[0]);
           setUserEntered(userId, true);
+          setEnteredCount(count => count + 1);
         };
 
         peerConnection.onicecandidate = event => {
@@ -155,19 +159,7 @@ function ChatRoom() {
         {users
           .filter(user => user.hasEntered)
           .map(user => (
-            <video
-              key={user.id}
-              autoPlay
-              playsInline
-              className={CAMERA_AREA_STYLE}
-              ref={el => {
-                if (el && user.stream) {
-                  el.srcObject = user.stream;
-                }
-              }}
-            >
-              <track kind="captions" />
-            </video>
+            <Camera key={user.id} stream={user.stream} />
           ))}
       </div>
     </div>
