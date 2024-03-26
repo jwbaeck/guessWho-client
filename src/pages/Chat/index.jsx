@@ -5,7 +5,6 @@ import {
   PAGE_STYLE,
   THEME_IMAGE_STYLE,
   CAMERA_GRID_STYLE,
-  CAMERA_AREA_STYLE,
 } from "../../utils/styleConstants";
 import useLobbyStore from "../../stores/useLobbyStore";
 import setUpSocket from "../../services/socketService";
@@ -66,7 +65,10 @@ function ChatRoom() {
         };
 
         const addLocalTracksToPeerConnection = (retryCount = 0) => {
-          if (localStreamRef.current) {
+          if (
+            localStreamRef.current &&
+            localStreamRef.current.getTracks().length > 0
+          ) {
             localStreamRef.current.getTracks().forEach(track => {
               peerConnection.addTrack(track, localStreamRef.current);
             });
@@ -76,7 +78,7 @@ function ChatRoom() {
             );
             setTimeout(
               () => addLocalTracksToPeerConnection(retryCount + 1),
-              1500,
+              1000,
             );
           } else {
             console.error(
