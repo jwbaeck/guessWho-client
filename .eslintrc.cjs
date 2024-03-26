@@ -31,5 +31,6 @@ module.exports = {
       { allowConstantExport: true },
     ],
     "no-bitwise": "off",
+    "no-return-assign": "off",
   },
 };
