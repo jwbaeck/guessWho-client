@@ -72,7 +72,7 @@ function ChatRoom() {
             localStreamRef.current.getTracks().forEach(track => {
               peerConnection.addTrack(track, localStreamRef.current);
             });
-          } else if (retryCount < 5) {
+          } else if (retryCount < 10) {
             console.log(
               `Local stream not ready. Retrying... Attempt ${retryCount + 1}`,
             );
