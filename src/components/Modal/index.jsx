@@ -29,7 +29,7 @@ function Modal({ isOpen, onClose, isLiar }) {
     visibility: decodedText ? "visible" : "hidden",
   };
   const roleMessage = isLiar ? "라이어" : "일반 시민";
-  const secretText = isLiar ? "You are a Liar" : "Pizza";
+  const secretText = isLiar ? "You are a Liar" : "Tteokbokki";
 
   return (
     <div className="fixed flex justify-center items-center inset-0 bg-black bg-opacity-50">
